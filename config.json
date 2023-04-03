@@ -1,0 +1,34 @@
+{
+    "train_protocol":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt",
+    "dev_protocol":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trn.txt",
+    "eval_protocol":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trn.txt",
+    "train_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_train/flac/",
+    "dev_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_dev/flac/",
+    "eval_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_eval/flac/",
+    "batch_size": 16,
+    "num_epochs": 100,
+    "loss": "CCE",
+    "eval_all_best": "True",
+    "eval_output": "eval_scores_using_best_dev_model.txt",
+    "cudnn_deterministic_toggle": "True",
+    "cudnn_benchmark_toggle": "False",
+    "model_config": {
+        "architecture": "AASIST",
+        "nb_samp": 64600,
+        "first_conv": 128,
+        "filters": [70, [1, 32], [32, 32], [32, 24], [24, 24]],
+        "gat_dims": [24, 32],
+        "pool_ratios": [0.4, 0.5, 0.7, 0.5],
+        "temperatures": [2.0, 2.0, 100.0, 100.0]
+    },
+    "optim_config": {
+        "optimizer": "adam", 
+        "amsgrad": "False",
+        "base_lr": 0.0001,
+        "lr_min": 0.000005,
+        "betas": [0.9, 0.999],
+        "weight_decay": 0.0001,
+        "scheduler": "cosine"
+    }
+}
+
