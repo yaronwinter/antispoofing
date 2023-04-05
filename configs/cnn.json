@@ -1,0 +1,28 @@
+{
+    "train_protocol":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/sub_sample/train_protocol.txt",
+    "dev_protocol":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/sub_sample/dev_protocol.txt",
+    "eval_protocol":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/sub_sample/eval_protocol.txt",
+    "train_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/sub_sample/train/",
+    "dev_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/sub_sample/dev/",
+    "eval_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/sub_sample/eval/",
+    "log_file_name":"/home/yaron/WorkEnv/logs/cnn_sub_sample.txt",
+    "max_speech_length":64600,
+    "batch_size": 32,
+    "num_epochs": 100,
+    "min_valid_epochs":3,
+    "early_stop_max_no_imp":3,
+    "optimizer_func":"adadelta",
+    "learning_rate":0.05,
+    "rho":0.95,
+    "beta_one":0,
+    "beta_two":0.98,
+    "eps":0.00000001,
+    "fft_frame_size":360,
+    "hop_length":120,
+    "sample_rate":16000,
+    "lfcc_size":256,
+    "filter_size":256,
+    "kernels":[3,4,5,6,7],
+    "dropout":0.5
+}
+

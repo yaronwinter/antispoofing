@@ -1,0 +1,13 @@
+{
+    "train_protocol":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt",
+    "dev_protocol":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt",
+    "eval_protocol":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt",
+    "train_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_train/flac/",
+    "dev_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_dev/flac/",
+    "eval_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_eval/flac/",
+    "train_fraction":0.001,
+    "dev_fraction":0.001,
+    "eval_fraction":0.0005,
+    "sub_sample_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/cold_sample/"
+}
+
