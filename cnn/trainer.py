@@ -2,7 +2,8 @@ import torch
 import numpy as np
 import time
 from torch.utils.data import DataLoader
-from cnn import cnn, data_loader, tester, utils
+from cnn import cnn, data_loader, utils
+import tester
 from tqdm import tqdm
 
 DEFAULT_MAX_EER = 1000

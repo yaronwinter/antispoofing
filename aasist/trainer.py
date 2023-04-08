@@ -3,8 +3,10 @@ import numpy as np
 import time
 import aasist.utils as gen_utils
 from torch.utils.data import DataLoader
-from aasist import data_loader, model, tester
+from aasist import data_loader
+from aasist import model as aasist_model
 from tqdm import tqdm
+import tester
 
 DEFAULT_MAX_EER = 1000
 SEED = 42
@@ -17,7 +19,7 @@ class Trainer:
         print('AASIST trainer - start')
         log_file = open(config["log_file_name"], "w", encoding="utf-8")
 
-        model = model.Model(config)
+        model = aasist_model.Model(config)
         model = model.to(self.active_device)
 
         print("Load samples")

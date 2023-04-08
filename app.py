@@ -31,9 +31,8 @@ def app(args: argparse.Namespace):
         if args.audio_folder is None:
             raise NotImplementedError("None audio folder while calling evaluate_sample")
         
-        model = tester.load_model(args.model_type, args.model_path, config)
-
-        tester.evaluate_sample(model, args.protocol, args.audio_folder, config)
+        model, data_loader = tester.load_model(args.model_type, args.model_path, config)
+        tester.evaluate_sample(model, data_loader, args.protocol, args.audio_folder, config)
     elif args.function == "evaluate_signal":
         print("Compute the scores of a random signal from the evaluation set")
         if args.model_path is None:

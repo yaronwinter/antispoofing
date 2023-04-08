@@ -33,22 +33,6 @@ def pad_random(x: np.ndarray, max_len: int = 64600) -> np.ndarray:
     return padded_x
 
 
-def get_eval_sample(label: str, attack_type: str, config: dict) -> Tensor:
-        protocol_file = config["eval_protocol"]
-        audio_files_folder = config["eval_audio_folder"]
-        with open(protocol_file, "r", encoding="utf-8") as f:
-            data_set_items = [x.strip().split() for x in f.readlines()]
-
-        if label is not None:
-            data_set_items = [x for x in data_set_items if x[LABEL_FIELD] == label]
-
-        if attack_type is not None:
-            data_set_items = [x for x in data_set_items if x[ATTACK_TYPE_FIELD] == attack_type]
-
-        np.random.shuffle(data_set_items)
-        audio_file = data_set_items[0][AUDIO_FILE_FIELD]
-        return read_signal(audio_files_folder + audio_file + ".flac", config['max_speech_elngth'])
-
 def read_signal(signal_file: str, max_speech_length) -> Tensor:
     signal, _ = sf.read(signal_file)
     padded_signal = pad_random(signal, max_speech_length)
@@ -59,12 +43,16 @@ def read_signal(signal_file: str, max_speech_length) -> Tensor:
 class Dataset_ASVspoof2019(Dataset):
     def __init__(self, config: dict, sample_name: str):
         # Read the data set protocol file.
+        self.max_speech_length = config['max_speech_length']
+
+        if sample_name is None:
+            return
+        
         protocol_file = config[sample_name + "_protocol"]
         audio_files_folder = config[sample_name + "_audio_folder"]
         with open(protocol_file, "r", encoding="utf-8") as f:
             data_set_items = [x.strip().split() for x in f.readlines()]
 
-        self.max_speech_length = config['max_speech_length']
         self.audio_files = [x[AUDIO_FILE_FIELD] for x in data_set_items]
         self.labels = [x[LABEL_FIELD] for x in data_set_items]
         self.audio_files_folder = audio_files_folder
@@ -83,3 +71,26 @@ class Dataset_ASVspoof2019(Dataset):
     
     def signal_to_tensor(self, signal: np.ndarray) -> Tensor:
         raise NotImplementedError()
+    
+    def read_signal(self, signal_file: str) -> Tensor:
+        signal, _ = sf.read(signal_file)
+        padded_signal = pad_random(signal, self.max_speech_length)
+        tensor_signal = self.signal_to_tensor(padded_signal)
+        return tensor_signal.unsqueeze(dim=0)
+    
+    def get_eval_sample(self, label: str, attack_type: str, config: dict) -> Tensor:
+        protocol_file = config["eval_protocol"]
+        audio_files_folder = config["eval_audio_folder"]
+        with open(protocol_file, "r", encoding="utf-8") as f:
+            data_set_items = [x.strip().split() for x in f.readlines()]
+
+        if label is not None:
+            data_set_items = [x for x in data_set_items if x[LABEL_FIELD] == label]
+
+        if attack_type is not None:
+            data_set_items = [x for x in data_set_items if x[ATTACK_TYPE_FIELD] == attack_type]
+
+        np.random.shuffle(data_set_items)
+        audio_file = data_set_items[0][AUDIO_FILE_FIELD]
+        return self.read_signal(audio_files_folder + audio_file + ".flac")
+

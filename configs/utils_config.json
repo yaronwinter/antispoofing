@@ -5,9 +5,9 @@
     "train_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_train/flac/",
     "dev_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_dev/flac/",
     "eval_audio_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/ASVspoof2019_LA_eval/flac/",
-    "train_fraction":0.001,
-    "dev_fraction":0.001,
-    "eval_fraction":0.0005,
-    "sub_sample_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/cold_sample/"
+    "train_fraction":0.081,
+    "dev_fraction":0.06,
+    "eval_fraction":0.035,
+    "sub_sample_folder":"/home/yaron/Office/Home_Excercise/CorSound/data/LA/toy_sample/"
 }
 

@@ -5,8 +5,8 @@ from sklearn import metrics
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import data_utils
-from aasist import model as aasist_model
-from cnn import cnn
+import aasist
+import cnn
 
 def compute_eer(model, test_set: DataLoader) -> tuple:
     t0 = time.time()
@@ -34,7 +34,7 @@ def compute_eer(model, test_set: DataLoader) -> tuple:
         
     return np.mean((fpr[eer_index], fnr[eer_index]))*100, (time.time() - t0)
 
-def evaluate_sample(model, eval_protocol: str, signals_folder: str, config: dict):
+def evaluate_sample(model, data_loader, eval_protocol: str, signals_folder: str, config: dict):
     model.eval()
     with open(eval_protocol, "r", encoding="utf-8") as f:
         data_set_items = [x.strip().split() for x in f.readlines()]
@@ -45,31 +45,33 @@ def evaluate_sample(model, eval_protocol: str, signals_folder: str, config: dict
             audio_file = item[data_utils.AUDIO_FILE_FIELD]
             label = item[data_utils.LABEL_FIELD]
             attack = item[data_utils.ATTACK_TYPE_FIELD]
-            signal = data_utils.read_signal(signals_folder + audio_file + ".flac", config['max_speech_length'])
+            signal = data_loader.read_signal(signals_folder + audio_file + ".flac")
             with torch.no_grad():
                 scores = model.predict(signal)
 
-            f.write(audio_file + "\t" + attack + "\t" + label + "\t{:.3f}".format(scores[0,0].item()) + "\t{:.3f}".format(scores[0,1].item()))
+            f.write(audio_file + "\t" + attack + "\t" + label + "\t{:.3f}".format(scores[0,0].item()) + "\t{:.3f}".format(scores[0,1].item()) + "\n")
             f.flush()
 
-def load_model(model_type: str, model_path: str, config: dict):
+def load_model(model_type: str, model_path: str, config: dict) -> tuple:
     if model_type == "aasist":
-        model = aasist_model.Model(config)
+        model = aasist.model.Model(config)
+        data_loader = aasist.data_loader.AAsistDataLoader(config, None)
     elif model_type == "cnn":
-        model = cnn.CNN(config, 2)
+        data_loader = cnn.data_loader.CNNDataLoader(config, None)
+        model = cnn.cnn.CNN(config, 2)
     else:
         raise NotImplementedError("Unknown model name was given: " + model_type)
     model.load_state_dict(torch.load(model_path))
-    return model.eval()
+    return model.eval(), data_loader
 
 
 def evaluate_signal(model_type: str, model_path: str, label: str, attack: str, config: dict) -> str:
-    print("read the signal")
-    signal = data_utils.get_eval_sample(label, attack, config)
-
     print("load the model")
-    model = load_model(model_type, model_path, config)
+    model, data_loader = load_model(model_type, model_path, config)
     
+    print("read the signal")
+    signal = data_loader.get_eval_sample(label, attack, config)
+
     print("compute signal")
     with torch.no_grad():
         scores = model.predict(signal)
