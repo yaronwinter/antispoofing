@@ -606,3 +606,7 @@ class Model(nn.Module):
         output = self.out_layer(last_hidden)
 
         return last_hidden, output
+    
+    def predict(self, x):
+        _, logits = self.forward(x)
+        return torch.softmax(logits, dim=1)

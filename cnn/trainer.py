@@ -1,10 +1,9 @@
 import torch
 import numpy as np
 import time
-import copy
 from torch.utils.data import DataLoader
 from cnn import cnn, data_loader, tester, utils
-import torch.optim as optim
+from tqdm import tqdm
 
 DEFAULT_MAX_EER = 1000
 SEED = 42
@@ -13,13 +12,12 @@ class Trainer:
     def __init__(self):
         self.active_device = (torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu'))
 
-    def train(self, config: dict) -> tuple:
+    def train(self, config: dict):
         print('CNN trainer - start')
         log_file = open(config["log_file_name"], "w", encoding="utf-8")
 
-        pending_model = cnn.CNN(config, 2)
-        pending_model = pending_model.to(self.active_device)
-        optimal_model = None
+        model = cnn.CNN(config, 2)
+        model = model.to(self.active_device)
 
         print("Load samples")
         train_dataset = data_loader.CNNDataLoader(config, "train")
@@ -43,7 +41,7 @@ class Trainer:
 
         
         print('set optimizer & loss')
-        optimizer = utils.get_optimizer(pending_model.parameters(), config)
+        optimizer = utils.get_optimizer(model.parameters(), config)
         weight = torch.FloatTensor([0.1, 0.9]).to(self.active_device)
         criterion = torch.nn.CrossEntropyLoss(weight=weight)
 
@@ -69,12 +67,12 @@ class Trainer:
             total_loss = 0
             num_batches = 0
             
-            pending_model.train()
-            for signals, labels in train_loader:
+            model.train()
+            for signals, labels in tqdm(train_loader):
                 signals = signals.to(self.active_device)
                 labels = labels.to(self.active_device)
                 
-                logits = pending_model(signals)
+                logits = model(signals)
                 
                 optimizer.zero_grad()
                 loss = criterion(logits, labels)
@@ -87,9 +85,9 @@ class Trainer:
             epoch_time = time.time() - epoch_start_time
             
             # Validation test.
-            dev_eer, _ = tester.compute_eer(pending_model, dev_loader)
-            train_eer, _ = tester.compute_eer(pending_model, train_loader)
-            eval_eer, _ = tester.compute_eer(pending_model, eval_loader)
+            dev_eer, _ = tester.compute_eer(model, dev_loader)
+            train_eer, _ = tester.compute_eer(model, train_loader)
+            eval_eer, _ = tester.compute_eer(model, eval_loader)
             print(f"{epoch:^7} | {avg_loss:^12.6f} | {train_eer:^9.2f} | {dev_eer:^9.2f} |  {eval_eer:^9.4f} | {epoch_time:^9.2f}")
             log_file.write(f"{epoch:^7} | {avg_loss:^12.6f} | {train_eer:^9.2f} | {dev_eer:^9.2f} |  {eval_eer:^9.4f} | {epoch_time:^9.2f}\n")
             log_file.flush()
@@ -112,7 +110,7 @@ class Trainer:
             if dev_eer < best_dev_eer:
                 best_dev_eer = dev_eer
                 best_dev_epoch = epoch
-                optimal_model = copy.deepcopy(pending_model)
+                torch.save(model.state_dict(), config['trained_models_path'] + str(epoch) + "_{:.3f}.model".format(dev_eer))
 
             if eval_eer < best_eval_eer:
                 best_eval_eer = eval_eer
@@ -124,4 +122,3 @@ class Trainer:
         log_file.write("Best Dev EER = {:.2f}".format(best_dev_eer) + ", best epoch = " + str(best_dev_epoch) + "\n")
         log_file.write("Best Eval Acc = {:.2f}".format(best_eval_eer) + ", best epoch = " + str(best_eval_epoch) + "\n")
         log_file.close()
-        return pending_model, optimal_model, best_dev_epoch

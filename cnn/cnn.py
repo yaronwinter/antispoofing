@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
 
 class CNN(nn.Module):
     def __init__(self,
@@ -38,3 +37,6 @@ class CNN(nn.Module):
         # logits = [batch size, #classes]
         
         return logits
+
+    def predict(self, signals):
+        return torch.softmax(self.forward(signals), dim=1)
