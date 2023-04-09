@@ -8,6 +8,8 @@ RUN mkdir app
 RUN mkdir app/data
 RUN mkdir app/logs
 RUN mkdir app/models
+RUN mkdir app/models/cnn
+RUN mkdir app/models/aasist
 
 ENV HOME=/app
 ENV SHELL=/bin/bash
