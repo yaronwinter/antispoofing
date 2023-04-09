@@ -65,12 +65,12 @@ def load_model(model_type: str, model_path: str, config: dict) -> tuple:
     return model.eval(), data_loader
 
 
-def evaluate_signal(model_type: str, model_path: str, label: str, attack: str, config: dict) -> str:
+def evaluate_signal(model_type: str, model_path: str, label: str, config: dict) -> str:
     print("load the model")
     model, data_loader = load_model(model_type, model_path, config)
     
     print("read the signal")
-    signal = data_loader.get_eval_sample(label, attack, config)
+    signal = data_loader.get_eval_sample(label, config)
 
     print("compute signal")
     with torch.no_grad():

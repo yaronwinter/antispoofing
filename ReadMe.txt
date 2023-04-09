@@ -4,14 +4,20 @@ Installation Instruction:
 
 (1) Clone the repository https://github.com/yaronwinter/antispoofing.
 (2) Use the docker file (beneath the root folder) for generating the image.
+	- docker build -t <image name>:<tag> -f Dockerfile .
 (3) Run the container induced by the generated image.
-	- Make sure to mount a host folder to the volumed container folder (/app/data)
+	- docker run -it --name <container name> -v <host mounted path>/:/app/data <image name>
 (4) Copy the three zipped datasets to the mounted folder and unzip them.
 	- The zipped datasets  are shared from a google drive:
 		* sub_sample.zip  - a subset that contain ~80%, randomly, of the LA dataset
 		* toy_sample.zip  - a subset that contain ~10%, randomly, of the LA dataset
 		* cold_sample.zip - a few dozens example, for correctness verification test
-(5) When all installed, the system support these four functions:
+(5) Add the output folders to the mounted folder:
+	- mkdir <mounted folder>/logs          #log files
+	- mkdir <mounted folder>/models
+	- mkdir <mounted folder>/models/cnn    #trained cnn models
+	- mkdir <mounted folder>/models/aasist #trained aasist models
+(6) When all installed, the system support these four functions:
 	(i)   train cnn model:    #python app.py -config configs/cnn.json -func_name train_cnn 
 	(ii)  train aasist model: #python app.py -config configs/aasist.json -func_name train_aasist 
 	(iii) evaluate sample:    #python app.py -config configs/<model name>.json -func_name evaluate_sample -model_path <model path> -model_type <model name> -protocol <protocol file> -audio_folder <audio folder>

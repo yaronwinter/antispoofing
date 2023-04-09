@@ -40,7 +40,7 @@ def app(args: argparse.Namespace):
         if args.model_type is None:
             raise NotImplementedError("None model type while calling evaluate_sample")
         
-        print(tester.evaluate_signal(args.model_type, args.model_path, args.label, args.attack, config))
+        print(tester.evaluate_signal(args.model_type, args.model_path, args.label, config))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Anti Spoofing System")
@@ -50,6 +50,5 @@ if __name__ == "__main__":
     parser.add_argument("-model_type", dest="model_type", type=str, help="model type", default=None)
     parser.add_argument("-protocol", dest="protocol", type=str, help="data set protocol file", default=None)
     parser.add_argument("-audio_folder", dest="audio_folder", type=str, help="data set audio files folder", default=None)
-    parser.add_argument("-label", dest="label", type=str, help="label item to choose", default=None)
-    parser.add_argument("-attack", dest="attack", type=str, help="attack type to choose", default=None)
+    parser.add_argument("-label", dest="label", type=str, help="label item to choose", default="spoof")
     app(parser.parse_args())

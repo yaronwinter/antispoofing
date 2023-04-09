@@ -78,17 +78,16 @@ class Dataset_ASVspoof2019(Dataset):
         tensor_signal = self.signal_to_tensor(padded_signal)
         return tensor_signal.unsqueeze(dim=0)
     
-    def get_eval_sample(self, label: str, attack_type: str, config: dict) -> Tensor:
+    def get_eval_sample(self, label: str, config: dict) -> Tensor:
         protocol_file = config["eval_protocol"]
         audio_files_folder = config["eval_audio_folder"]
         with open(protocol_file, "r", encoding="utf-8") as f:
             data_set_items = [x.strip().split() for x in f.readlines()]
 
-        if label is not None:
-            data_set_items = [x for x in data_set_items if x[LABEL_FIELD] == label]
+        if label not in LABELS_MAP:
+            raise NotImplementedError("Unown label: " + label + ", while the only valid labels are: " + str(LABEL_FIELD.keys()))
 
-        if attack_type is not None:
-            data_set_items = [x for x in data_set_items if x[ATTACK_TYPE_FIELD] == attack_type]
+        data_set_items = [x for x in data_set_items if x[LABEL_FIELD] == label]
 
         np.random.shuffle(data_set_items)
         audio_file = data_set_items[0][AUDIO_FILE_FIELD]
