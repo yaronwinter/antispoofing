@@ -6,10 +6,10 @@ LABEL task="Anti Spoofing"
 RUN apt-get update --fix-missing && apt-get install -y wget python3-pip
 RUN mkdir app
 RUN mkdir app/data
-RUN mkdir app/logs
-RUN mkdir app/models
-RUN mkdir app/models/cnn
-RUN mkdir app/models/aasist
+RUN mkdir app/data/logs
+RUN mkdir app/data/models
+RUN mkdir app/data/models/cnn
+RUN mkdir app/data/models/aasist
 
 ENV HOME=/app
 ENV SHELL=/bin/bash
