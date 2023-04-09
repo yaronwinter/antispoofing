@@ -39,4 +39,5 @@ Installation Instruction:
   (2) As my machine doesn't have GPU - it was not actually tested on cuda.
   (3) The notebook version did run on GPU, through Google Colab.
   (4) The smaller sub samples were used due to limited resources constraints.
+  (5) Make sure that for each model type the adequate parameters file is used.
 
