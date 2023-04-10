@@ -21,14 +21,13 @@ Installation Instruction:
 	(i)   train cnn model:    #python app.py -config configs/cnn.json -func_name train_cnn 
 	(ii)  train aasist model: #python app.py -config configs/aasist.json -func_name train_aasist 
 	(iii) evaluate sample:    #python app.py -config configs/<model name>.json -func_name evaluate_sample -model_path <model path> -model_type <model name> -protocol <protocol file> -audio_folder <audio folder>
-	(iv)  evaluate signal:    #python app.py -config configs/<model name>.json -func_name evaluate_signal -model_path <model path> -model_type <model name> -label <label> -attack <attack type>
+	(iv)  evaluate signal:    #python app.py -config configs/<model name>.json -func_name evaluate_signal -model_path <model path> -model_type <model name> -label <label>
 	- Where:
 		* model name   := cnn / aasist
 		* model path   := a full path to a model. The models are generated during training
 		* protocol     := a file formatted as AVS 2019 protocol file
 		* audio folder := a folder containing audio file. Must be associated with the protocol file (as in AVS 2019 dataset)
-		* label        := bonafide / spoof / None
-		* attack       := one of the AVS 2019 attack codes, or None
+		* label        := bonafide / spoof
 	- Functions Outputs:
 		* train (cnn / aasist): models iamges are stored in /app/model during the training
 		* evaluate sample:      output log files is written to /app/logs, describing the model's results for each evaluated item
